@@ -36,7 +36,7 @@ export const initUsers: UsersState = {
   userWorkspaces: [],
   selectedWorkspaceTab: null,
   workspaces: [],
-  showOnlyUserWork: false,
+  showOnlyUserWork: true,
   serverVersions: null,
   gettingStarted: null,
   settings: null,

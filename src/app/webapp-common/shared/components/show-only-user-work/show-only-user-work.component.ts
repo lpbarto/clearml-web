@@ -6,6 +6,8 @@ import {selectShowOnlyUserWork} from '@common/core/reducers/users-reducer';
 import {MenuComponent} from '@common/shared/ui-components/panel/menu/menu.component';
 import {MenuItemComponent} from '@common/shared/ui-components/panel/menu-item/menu-item.component';
 import {AsyncPipe} from '@angular/common';
+import { selectIsAdmin } from '@common/core/reducers/users-reducer';
+
 
 @Component({
   selector: 'sm-show-only-user-work',
@@ -19,9 +21,13 @@ import {AsyncPipe} from '@angular/common';
   ]
 })
 export class ShowOnlyUserWorkComponent {
+  public isUserAdmin: boolean;
   public isUserMenuOpened: boolean;
   public showOnlyUserWork$: Observable<boolean>;
   constructor(private store: Store) {
+    this.store.select(selectIsAdmin).subscribe(isAdmin => {
+      this.isUserAdmin = isAdmin;
+    });
     this.showOnlyUserWork$ = this.store.select(selectShowOnlyUserWork);
   }
 
