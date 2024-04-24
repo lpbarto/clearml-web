@@ -7,3 +7,6 @@
   <sm-menu-item *ngIf="isUserTypeAdmin$ | async" itemLabel="Team's Work" (itemClicked)="userFilterChanged(false)"
                 iconClass="al-icon al-ico-users sm-md" data-id="Team's Work Option"></sm-menu-item>
 </sm-menu>
+
+<!-- Add this line to print the value of isUserTypeAdmin$ -->
+<p>isUserTypeAdmin$: {{isUserTypeAdmin$ | async}}</p>
