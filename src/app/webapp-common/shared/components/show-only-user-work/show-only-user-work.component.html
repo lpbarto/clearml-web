@@ -4,7 +4,7 @@
   [prefixIconClass]="'me-2 al-icon sm-md ' + ((showOnlyUserWork$ | async)? 'al-ico-me': 'al-ico-users')"
   class="menu" data-id="Team's Work">
   <sm-menu-item itemLabel="My Work" (itemClicked)="userFilterChanged(true)" iconClass="al-icon al-ico-me sm-md" data-id="My Work Option"></sm-menu-item>
-  <sm-menu-item *ngIf="isUserTypeAdmin$ | async" itemLabel="Team's Work" (itemClicked)="userFilterChanged(false)"
+  <sm-menu-item *ngIf="true" itemLabel="Team's Work" (itemClicked)="userFilterChanged(false)"
                 iconClass="al-icon al-ico-users sm-md" data-id="Team's Work Option"></sm-menu-item>
 </sm-menu>
 
