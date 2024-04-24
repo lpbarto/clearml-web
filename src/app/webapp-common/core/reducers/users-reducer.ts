@@ -47,6 +47,7 @@ export const selectSettings = createSelector(users, (state) => state?.settings);
 export const selectMaxDownloadItems = createSelector(selectSettings, (state): number => state?.max_download_items ?? 1000);
 export const selectCurrentUser = createSelector(users, state => state.currentUser);
 export const selectIsAdmin = createSelector(users, state => state.currentUser.role === RoleEnum.Admin);
+export const selectIsUserTypeAdmin = createSelector(users, state => state.currentUser.usertype === 'admin');
 export const selectActiveWorkspace = createSelector(users, state => state.activeWorkspace);
 export const selectActiveWorkspaceTier = createSelector(selectActiveWorkspace, workspace => workspace?.tier);
 export const selectUserWorkspaces = createSelector(users, state => state.userWorkspaces);

@@ -22,6 +22,7 @@ export interface GetCurrentUserResponseUserObject {
     given_name?: string;
     family_name?: string;
     role?: string;
+    usertype?: string;
     avatar?: string;
     company?: GetCurrentUserResponseUserObjectCompany;
     email?: string;

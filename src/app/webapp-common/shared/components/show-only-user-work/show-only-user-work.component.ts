@@ -6,7 +6,7 @@ import {selectShowOnlyUserWork} from '@common/core/reducers/users-reducer';
 import {MenuComponent} from '@common/shared/ui-components/panel/menu/menu.component';
 import {MenuItemComponent} from '@common/shared/ui-components/panel/menu-item/menu-item.component';
 import {AsyncPipe} from '@angular/common';
-import { selectIsAdmin } from '@common/core/reducers/users-reducer';
+import { selectIsUserTypeAdmin } from '@common/core/reducers/users-reducer';
 
 
 @Component({
@@ -21,13 +21,11 @@ import { selectIsAdmin } from '@common/core/reducers/users-reducer';
   ]
 })
 export class ShowOnlyUserWorkComponent {
-  public isUserAdmin: boolean;
+  public isUserTypeAdmin$: Observable<boolean>;
   public isUserMenuOpened: boolean;
   public showOnlyUserWork$: Observable<boolean>;
   constructor(private store: Store) {
-    this.store.select(selectIsAdmin).subscribe(isAdmin => {
-      this.isUserAdmin = isAdmin;
-    });
+    this.isUserTypeAdmin$ = this.store.select(selectIsUserTypeAdmin);
     this.showOnlyUserWork$ = this.store.select(selectShowOnlyUserWork);
   }
 
