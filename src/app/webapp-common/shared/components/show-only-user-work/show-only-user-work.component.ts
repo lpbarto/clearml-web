@@ -28,6 +28,8 @@ export class ShowOnlyUserWorkComponent {
     this.isUserTypeAdmin$ = this.store.select(selectIsUserTypeAdmin);
     this.showOnlyUserWork$ = this.store.select(selectShowOnlyUserWork);
 
+    console.log('vero isUserTypeAdmin$', this.isUserTypeAdmin$);
+
     this.isUserTypeAdmin$.subscribe(value => {
       console.log('isUserTypeAdmin$', value);
     });
