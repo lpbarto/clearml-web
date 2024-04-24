@@ -25,14 +25,8 @@ export class ShowOnlyUserWorkComponent {
   public isUserMenuOpened: boolean;
   public showOnlyUserWork$: Observable<boolean>;
   constructor(private store: Store) {
-    this.isUserTypeAdmin$ = this.store.select(selectIsUserTypeAdmin);
     this.showOnlyUserWork$ = this.store.select(selectShowOnlyUserWork);
-
-    console.log('vero isUserTypeAdmin$', this.isUserTypeAdmin$);
-
-    this.isUserTypeAdmin$.subscribe(value => {
-      console.log('isUserTypeAdmin$', value);
-    });
+    this.isUserTypeAdmin$ = this.store.select(selectIsUserTypeAdmin);
   }
 
   userFilterChanged(userFiltered: boolean) {
