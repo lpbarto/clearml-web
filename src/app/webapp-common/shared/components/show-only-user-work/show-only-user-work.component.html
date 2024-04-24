@@ -1,4 +1,5 @@
 <sm-menu
+  *ngIf="true"
   panelClasses="light-theme"
   [header]="(showOnlyUserWork$ | async) ? 'My Work': 'Team\'s Work'"
   [prefixIconClass]="'me-2 al-icon sm-md ' + ((showOnlyUserWork$ | async)? 'al-ico-me': 'al-ico-users')"
