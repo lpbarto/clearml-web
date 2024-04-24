@@ -27,6 +27,10 @@ export class ShowOnlyUserWorkComponent {
   constructor(private store: Store) {
     this.isUserTypeAdmin$ = this.store.select(selectIsUserTypeAdmin);
     this.showOnlyUserWork$ = this.store.select(selectShowOnlyUserWork);
+
+    this.isUserTypeAdmin$.subscribe(value => {
+      console.log('isUserTypeAdmin$', value);
+    });
   }
 
   userFilterChanged(userFiltered: boolean) {
