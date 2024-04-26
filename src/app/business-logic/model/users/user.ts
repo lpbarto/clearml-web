@@ -42,6 +42,10 @@ export interface User {
      */
     role?: string;
     /**
+     * User type
+     */
+    usertype?: string;
+    /**
      * Providers uses has logged-in with
      */
     providers?: object;

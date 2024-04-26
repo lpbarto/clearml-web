@@ -93,6 +93,7 @@ export class CommonProjectsPageComponent implements OnInit, OnDestroy {
   protected readonly searchQuery$: Observable<SearchState['searchQuery']>;
   private projectDialog: MatDialogRef<ProjectDialogComponent, any>;
   public selectedProject$: Observable<Project>;
+  public showOnlyUserWork$: Observable<boolean>;
   public projectId: string;
   public subs = new Subscription();
   private selectedProject: Project;
@@ -108,6 +109,8 @@ export class CommonProjectsPageComponent implements OnInit, OnDestroy {
     this.noMoreProjects$ = this.store.select(selectNoMoreProjects);
     this.selectedProjectId$ = this.store.select(selectRouterParams).pipe(map((params: Params) => params?.projectId));
     this.selectedProject$ = this.store.select(selectSelectedProject).pipe(tap(selectedProject => this.selectedProject = selectedProject));
+    this.showOnlyUserWork$ = this.store.select(selectShowOnlyUserWork);
+
 
     this.projectsList$ = combineLatest([
       this.store.select(selectProjects),
@@ -146,15 +149,21 @@ export class CommonProjectsPageComponent implements OnInit, OnDestroy {
   };
 
   protected getExtraProjects(selectedProjectId, selectedProject) {
-    return [{
-      ...((selectedProjectId && selectedProject?.id) ? selectedProject : this.ALL_EXPERIMENTS_CARD),
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      id: selectedProjectId ? selectedProjectId : '*',
-      name: 'All Experiments',
-      basename: 'All Experiments',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      sub_projects: null,
-    } as ProjectsGetAllResponseSingle];
+    let extraProjects = [];
+    this.showOnlyUserWork$.pipe(take(1)).subscribe(showOnlyUserWork => {
+      if (!showOnlyUserWork) {
+        extraProjects.push({
+          ...((selectedProjectId && selectedProject?.id) ? selectedProject : this.ALL_EXPERIMENTS_CARD),
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          id: selectedProjectId ? selectedProjectId : '*',
+          name: 'All Experiments',
+          basename: 'All Experiments',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          sub_projects: null,
+        } as ProjectsGetAllResponseSingle);
+      }
+    });
+    return extraProjects;
   }
 
   ngOnInit() {
