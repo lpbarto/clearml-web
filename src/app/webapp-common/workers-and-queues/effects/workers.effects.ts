@@ -20,7 +20,7 @@ import {MESSAGES_SEVERITY} from '@common/constants';
 
 const prepareStatsQuery = (entitie: string, keys: { key: string }[], range: number, granularity: number,  date: Date): WorkersGetStatsRequest => {
   const now = date ? Math.floor(date.getTime() / 1000) : Math.floor(Date.now() / 1000);
-  console.log('prepareStatsQuery', entitie, keys, range, granularity, date, now);
+  console.log('prepareStatsQuery', range, date, now);
   console.log('prepareStatsQuery', now - range);
   return {
     /* eslint-disable @typescript-eslint/naming-convention */

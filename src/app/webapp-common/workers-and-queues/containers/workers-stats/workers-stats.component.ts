@@ -43,6 +43,8 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   public activeWorker: Worker;
   public yAxisLabel: string;
   public currentDate: Date = new Date(); // Start from the current date
+  public liveChart = true;
+
 
 
   @ViewChild('chart', {read: ViewContainerRef, static: true}) chartRef: ViewContainerRef;
@@ -121,10 +123,10 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     const granularity = Math.max(Math.floor(range / width), this.activeWorker ? 10 : 40);
 
     this.store.dispatch(setStats({data: null}));
-    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
+    this.store.dispatch(getWorkers({date: this.liveChart ? null : this.currentDate, maxPoints: width}));
 
     this.intervaleHandle = window.setInterval(() => {
-      this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
+      this.store.dispatch(getWorkers({date: this.liveChart ? null : this.currentDate, maxPoints: width}));
     }, granularity * 1000);
   }
 
@@ -161,6 +163,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     }
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
+    this.liveChart = false;
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 
@@ -187,6 +190,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     }
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
+    this.liveChart = false;
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 
@@ -194,6 +198,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     this.currentDate = new Date(); // Reset to the current date and time
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
+    this.liveChart = true;
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 }
