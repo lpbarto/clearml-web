@@ -115,7 +115,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   }
 
   chartChanged() {
-    console.log('chartChanged');
+    //console.log('chartChanged');
     const range = parseInt(this.currentTimeFrame, 10);
     clearInterval(this.intervaleHandle);
     this.refreshChart = true;

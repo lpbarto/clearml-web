@@ -20,8 +20,8 @@ import {MESSAGES_SEVERITY} from '@common/constants';
 
 const prepareStatsQuery = (entitie: string, keys: { key: string }[], range: number, granularity: number,  date: Date): WorkersGetStatsRequest => {
   const now = date ? Math.floor(date.getTime() / 1000) : Math.floor(Date.now() / 1000);
-  console.log('prepareStatsQuery', range, date, now);
-  console.log('prepareStatsQuery', now - range);
+  //console.log('prepareStatsQuery', range, date, now);
+  //console.log('prepareStatsQuery', now - range);
   return {
     /* eslint-disable @typescript-eslint/naming-convention */
     from_date: now - range,
@@ -95,13 +95,13 @@ export class WorkersEffects {
       currentStats = cloneDeep(currentStats);
       if (!action.usePredefinedRange && Array.isArray(currentStats) && currentStats.some(topic => topic.dates.length > 1)) {
         timeFrame = now - getLastTimestamp(currentStats) + granularity;
-        console.log('timeFrame calcolato', timeFrame);
+        //console.log('timeFrame calcolato', timeFrame);
       } else {
-        console.log('timeFrame predefinito', range);
+        //console.log('timeFrame predefinito', range);
         timeFrame = range;
       }
       if (worker) {
-        console.log('workers.effects worker');
+        //console.log('workers.effects worker');
         const req = prepareStatsQuery(worker.id, keys, timeFrame, granularity, action.date);
         return this.workersApi.workersGetStats(req).pipe(
           map(res => {
@@ -115,7 +115,7 @@ export class WorkersEffects {
             addMessage(MESSAGES_SEVERITY.WARN, 'Failed to fetching activity worker statistics')])
         );
       } else {
-        console.log('workers.effects worker not found');
+        //console.log('workers.effects worker not found');
 
         const req: WorkersGetActivityReportRequest = {
           /* eslint-disable @typescript-eslint/naming-convention */
