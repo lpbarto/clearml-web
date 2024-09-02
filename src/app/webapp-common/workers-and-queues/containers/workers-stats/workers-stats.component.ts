@@ -115,6 +115,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   }
 
   chartChanged() {
+    console.log('chartChanged');
     const range = parseInt(this.currentTimeFrame, 10);
     clearInterval(this.intervaleHandle);
     this.refreshChart = true;
@@ -172,8 +173,6 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
     this.liveChart = false;
-    this.currentTimeFrame = (3 * TIME_INTERVALS.HOUR).toString();
-    this.store.dispatch(setStatsParams({timeFrame: this.currentTimeFrame, param: this.currentParam}));
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
 
   }

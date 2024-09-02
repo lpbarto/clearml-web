@@ -101,6 +101,7 @@ export class WorkersEffects {
         timeFrame = range;
       }
       if (worker) {
+        console.log('workers.effects worker');
         const req = prepareStatsQuery(worker.id, keys, timeFrame, granularity, action.date);
         return this.workersApi.workersGetStats(req).pipe(
           map(res => {
@@ -114,6 +115,8 @@ export class WorkersEffects {
             addMessage(MESSAGES_SEVERITY.WARN, 'Failed to fetching activity worker statistics')])
         );
       } else {
+        console.log('workers.effects worker not found');
+
         const req: WorkersGetActivityReportRequest = {
           /* eslint-disable @typescript-eslint/naming-convention */
           from_date: now - timeFrame,
