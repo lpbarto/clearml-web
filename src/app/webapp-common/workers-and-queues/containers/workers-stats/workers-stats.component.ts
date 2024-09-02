@@ -210,6 +210,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     this.currentDate = new Date(); // Reset to the current date and time
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
+    this.liveChart = true;
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
     this.chartChanged();
 
