@@ -172,10 +172,8 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
     this.liveChart = false;
-
-    this.currentTimeFrame = (this.currentDate.getTime() / 1000).toString();
+    this.currentTimeFrame = (3 * TIME_INTERVALS.HOUR).toString();
     this.store.dispatch(setStatsParams({timeFrame: this.currentTimeFrame, param: this.currentParam}));
-
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
 
   }
