@@ -18,8 +18,10 @@ import {addMultipleSortColumns} from '../../shared/utils/shared-utils';
 import {transformAndSortWorkers} from '@common/workers-and-queues/workers-and-queues.utils';
 import {MESSAGES_SEVERITY} from '@common/constants';
 
-const prepareStatsQuery = (entitie: string, keys: { key: string }[], range: number, granularity: number): WorkersGetStatsRequest => {
-  const now = Math.floor((new Date()).getTime() / 1000);
+const prepareStatsQuery = (entitie: string, keys: { key: string }[], range: number, granularity: number,  date: Date): WorkersGetStatsRequest => {
+  const now = date ? Math.floor(date.getTime() / 1000) : Math.floor(Date.now() / 1000);
+  //console.log('prepareStatsQuery', range, date, now);
+  //console.log('prepareStatsQuery', now - range);
   return {
     /* eslint-disable @typescript-eslint/naming-convention */
     from_date: now - range,
@@ -84,20 +86,23 @@ export class WorkersEffects {
       this.store.select(selectSelectedWorker)
     ]),
     switchMap(([action, currentStats, selectedRange, params, worker]) => {
-      const now = Math.floor((new Date()).getTime() / 1000);
+      const now = action.date ? Math.floor(action.date.getTime() / 1000) : Math.floor(Date.now() / 1000);
       const keys = params.split(';').map(val => ({key: val}));
       const range = parseInt(selectedRange, 10);
       const granularity = Math.max(Math.floor(range / action.maxPoints), worker ? 10 : 40);
       let timeFrame: number;
 
       currentStats = cloneDeep(currentStats);
-      if (Array.isArray(currentStats) && currentStats.some(topic => topic.dates.length > 1)) {
+      if (!action.usePredefinedRange && Array.isArray(currentStats) && currentStats.some(topic => topic.dates.length > 1)) {
         timeFrame = now - getLastTimestamp(currentStats) + granularity;
+        //console.log('timeFrame calcolato', timeFrame);
       } else {
+        //console.log('timeFrame predefinito', range);
         timeFrame = range;
       }
       if (worker) {
-        const req = prepareStatsQuery(worker.id, keys, timeFrame, granularity);
+        //console.log('workers.effects worker');
+        const req = prepareStatsQuery(worker.id, keys, timeFrame, granularity, action.date);
         return this.workersApi.workersGetStats(req).pipe(
           map(res => {
             if (res) {
@@ -110,6 +115,8 @@ export class WorkersEffects {
             addMessage(MESSAGES_SEVERITY.WARN, 'Failed to fetching activity worker statistics')])
         );
       } else {
+        //console.log('workers.effects worker not found');
+
         const req: WorkersGetActivityReportRequest = {
           /* eslint-disable @typescript-eslint/naming-convention */
           from_date: now - timeFrame,

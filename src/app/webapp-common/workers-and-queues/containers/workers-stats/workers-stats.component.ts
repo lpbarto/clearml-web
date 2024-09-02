@@ -1,3 +1,4 @@
+import {TIME_INTERVALS} from '@common/workers-and-queues/workers-and-queues.consts';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -41,6 +42,10 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   public refreshChart = true;
   public activeWorker: Worker;
   public yAxisLabel: string;
+  public currentDate: Date = new Date(); // Start from the current date
+  public liveChart = true;
+
+
 
   @ViewChild('chart', {read: ViewContainerRef, static: true}) chartRef: ViewContainerRef;
 
@@ -110,6 +115,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   }
 
   chartChanged() {
+    //console.log('chartChanged');
     const range = parseInt(this.currentTimeFrame, 10);
     clearInterval(this.intervaleHandle);
     this.refreshChart = true;
@@ -118,10 +124,18 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     const granularity = Math.max(Math.floor(range / width), this.activeWorker ? 10 : 40);
 
     this.store.dispatch(setStats({data: null}));
-    this.store.dispatch(getWorkers({maxPoints: width}));
+    if (this.liveChart) {
+      this.store.dispatch(getWorkers({maxPoints: width}));
+    }else {
+      this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+    }
 
     this.intervaleHandle = window.setInterval(() => {
-      this.store.dispatch(getWorkers({maxPoints: width}));
+      if (this.liveChart) {
+        this.store.dispatch(getWorkers({maxPoints: width}));
+      }else {
+        this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+      }
     }, granularity * 1000);
   }
 
@@ -133,5 +147,72 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   timeFrameChange(event) {
     this.currentTimeFrame = event;
     this.store.dispatch(setStatsParams({timeFrame: this.currentTimeFrame, param: this.currentParam}));
+  }
+
+  moveBack() {
+    switch (this.currentTimeFrame) {
+      case (3 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() - 3);
+        break;
+      case (6 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() - 6);
+        break;
+      case (12 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() - 12);
+        break;
+      case (TIME_INTERVALS.DAY).toString():
+        this.currentDate.setDate(this.currentDate.getDate() - 1);
+        break;
+      case (TIME_INTERVALS.WEEK).toString():
+        this.currentDate.setDate(this.currentDate.getDate() - 7);
+        break;
+      case (TIME_INTERVALS.MONTH).toString():
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        break;
+    }
+    let width = this.chartRef.element.nativeElement.clientWidth || 1000;
+    width = Math.min(0.8 * width, 1000);
+    this.liveChart = false;
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+    this.chartChanged();
+  }
+
+  moveNext() {
+    switch (this.currentTimeFrame) {
+      case (3 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() + 3);
+        break;
+      case (6 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() + 6);
+        break;
+      case (12 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() + 12);
+        break;
+      case (TIME_INTERVALS.DAY).toString():
+        this.currentDate.setDate(this.currentDate.getDate() + 1);
+        break;
+      case (TIME_INTERVALS.WEEK).toString():
+        this.currentDate.setDate(this.currentDate.getDate() + 7);
+        break;
+      case (TIME_INTERVALS.MONTH).toString():
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+        break;
+    }
+    let width = this.chartRef.element.nativeElement.clientWidth || 1000;
+    width = Math.min(0.8 * width, 1000);
+    this.liveChart = false;
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+    this.chartChanged();
+
+  }
+
+  moveCurrent() {
+    this.currentDate = new Date(); // Reset to the current date and time
+    let width = this.chartRef.element.nativeElement.clientWidth || 1000;
+    width = Math.min(0.8 * width, 1000);
+    this.liveChart = true;
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
+    this.chartChanged();
+
   }
 }
