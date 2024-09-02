@@ -121,10 +121,10 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     const granularity = Math.max(Math.floor(range / width), this.activeWorker ? 10 : 40);
 
     this.store.dispatch(setStats({data: null}));
-    this.store.dispatch(getWorkers({maxPoints: width}));
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
 
     this.intervaleHandle = window.setInterval(() => {
-      this.store.dispatch(getWorkers({maxPoints: width}));
+      this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
     }, granularity * 1000);
   }
 
