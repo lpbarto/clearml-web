@@ -172,7 +172,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
     this.liveChart = false;
-    this.store.dispatch(setStats({data: null}));
+    this.store.dispatch(setStatsParams({timeFrame: this.currentTimeFrame, param: this.currentParam}));
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
   }
 
@@ -200,7 +200,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
     this.liveChart = false;
-    this.store.dispatch(setStats({data: null}));
+    this.store.dispatch(setStatsParams({timeFrame: this.currentTimeFrame, param: this.currentParam}));
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
   }
 
@@ -208,7 +208,6 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     this.currentDate = new Date(); // Reset to the current date and time
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
-    this.liveChart = true;
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 }
