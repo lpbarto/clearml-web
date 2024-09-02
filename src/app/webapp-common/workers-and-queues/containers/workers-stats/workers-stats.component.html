@@ -19,9 +19,9 @@
     </i>
   </div>
   <div class="timeframe-controls">
-    <button (click)="moveBack()">Back</button>
-    <button (click)="moveNext()">Next</button>
-    <button (click)="moveCurrent()">Current</button>
+    <button (click)="moveBack()" class="dark-outline">Back</button>
+    <button (click)="moveNext()" class="dark-outline">Next</button>
+    <button (click)="moveCurrent()" class="dark-outline">Current</button>
   </div>
   <mat-form-field appearance="outline" class="dark-outline thin time-selector no-bottom">
     <mat-select [ngModel]="currentTimeFrame" (ngModelChange)="timeFrameChange($event)" name="time-frame" panelClass="dark-outline">
