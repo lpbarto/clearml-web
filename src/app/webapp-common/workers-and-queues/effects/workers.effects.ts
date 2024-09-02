@@ -18,8 +18,8 @@ import {addMultipleSortColumns} from '../../shared/utils/shared-utils';
 import {transformAndSortWorkers} from '@common/workers-and-queues/workers-and-queues.utils';
 import {MESSAGES_SEVERITY} from '@common/constants';
 
-const prepareStatsQuery = (entitie: string, keys: { key: string }[], range: number, granularity: number): WorkersGetStatsRequest => {
-  const now = Math.floor((new Date()).getTime() / 1000);
+const prepareStatsQuery = (entitie: string, keys: { key: string }[], range: number, granularity: number,  date: Date): WorkersGetStatsRequest => {
+  const now = date ? Math.floor(date.getTime() / 1000) : Math.floor(Date.now() / 1000);
   return {
     /* eslint-disable @typescript-eslint/naming-convention */
     from_date: now - range,
@@ -84,7 +84,7 @@ export class WorkersEffects {
       this.store.select(selectSelectedWorker)
     ]),
     switchMap(([action, currentStats, selectedRange, params, worker]) => {
-      const now = Math.floor((new Date()).getTime() / 1000);
+      const now = action.date ? Math.floor(action.date.getTime() / 1000) : Math.floor(Date.now() / 1000);
       const keys = params.split(';').map(val => ({key: val}));
       const range = parseInt(selectedRange, 10);
       const granularity = Math.max(Math.floor(range / action.maxPoints), worker ? 10 : 40);
@@ -97,7 +97,7 @@ export class WorkersEffects {
         timeFrame = range;
       }
       if (worker) {
-        const req = prepareStatsQuery(worker.id, keys, timeFrame, granularity);
+        const req = prepareStatsQuery(worker.id, keys, timeFrame, granularity, action.date);
         return this.workersApi.workersGetStats(req).pipe(
           map(res => {
             if (res) {

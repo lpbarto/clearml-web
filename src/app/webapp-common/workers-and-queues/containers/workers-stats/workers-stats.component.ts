@@ -1,3 +1,4 @@
+import {TIME_INTERVALS} from '@common/workers-and-queues/workers-and-queues.consts';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -41,6 +42,8 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   public refreshChart = true;
   public activeWorker: Worker;
   public yAxisLabel: string;
+  public currentDate: Date = new Date(); // Start from the current date
+
 
   @ViewChild('chart', {read: ViewContainerRef, static: true}) chartRef: ViewContainerRef;
 
@@ -133,5 +136,58 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
   timeFrameChange(event) {
     this.currentTimeFrame = event;
     this.store.dispatch(setStatsParams({timeFrame: this.currentTimeFrame, param: this.currentParam}));
+  }
+
+  moveBack() {
+    switch (this.currentTimeFrame) {
+      case (3 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() - 3);
+        break;
+      case (6 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() - 6);
+        break;
+      case (12 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() - 12);
+        break;
+      case (TIME_INTERVALS.DAY).toString():
+        this.currentDate.setDate(this.currentDate.getDate() - 1);
+        break;
+      case (TIME_INTERVALS.WEEK).toString():
+        this.currentDate.setDate(this.currentDate.getDate() - 7);
+        break;
+      case (TIME_INTERVALS.MONTH).toString():
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        break;
+    }
+    this.store.dispatch(getWorkers({date: this.currentDate}));
+  }
+
+  moveNext() {
+    switch (this.currentTimeFrame) {
+      case (3 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() + 3);
+        break;
+      case (6 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() + 6);
+        break;
+      case (12 * TIME_INTERVALS.HOUR).toString():
+        this.currentDate.setHours(this.currentDate.getHours() + 12);
+        break;
+      case (TIME_INTERVALS.DAY).toString():
+        this.currentDate.setDate(this.currentDate.getDate() + 1);
+        break;
+      case (TIME_INTERVALS.WEEK).toString():
+        this.currentDate.setDate(this.currentDate.getDate() + 7);
+        break;
+      case (TIME_INTERVALS.MONTH).toString():
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+        break;
+    }
+    this.store.dispatch(getWorkers({date: this.currentDate}));
+  }
+
+  moveCurrent() {
+    this.currentDate = new Date(); // Reset to the current date and time
+    this.store.dispatch(getWorkers({date: this.currentDate}));
   }
 }
