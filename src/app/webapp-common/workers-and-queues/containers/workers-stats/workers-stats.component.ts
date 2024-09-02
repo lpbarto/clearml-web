@@ -123,10 +123,18 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     const granularity = Math.max(Math.floor(range / width), this.activeWorker ? 10 : 40);
 
     this.store.dispatch(setStats({data: null}));
-    this.store.dispatch(getWorkers({date: this.liveChart ? null : this.currentDate, maxPoints: width}));
+    if (this.liveChart) {
+      this.store.dispatch(getWorkers({maxPoints: width}));
+    }else {
+      this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+    }
 
     this.intervaleHandle = window.setInterval(() => {
-      this.store.dispatch(getWorkers({date: this.liveChart ? null : this.currentDate, maxPoints: width}));
+      if (this.liveChart) {
+        this.store.dispatch(getWorkers({maxPoints: width}));
+      }else {
+        this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+      }
     }, granularity * 1000);
   }
 
