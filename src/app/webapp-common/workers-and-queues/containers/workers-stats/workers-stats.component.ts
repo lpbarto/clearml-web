@@ -202,6 +202,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     width = Math.min(0.8 * width, 1000);
     this.liveChart = false;
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width, usePredefinedRange: true}));
+    this.chartChanged();
 
   }
 
@@ -210,5 +211,7 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
     let width = this.chartRef.element.nativeElement.clientWidth || 1000;
     width = Math.min(0.8 * width, 1000);
     this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
+    this.chartChanged();
+
   }
 }
