@@ -159,7 +159,9 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
         this.currentDate.setMonth(this.currentDate.getMonth() - 1);
         break;
     }
-    this.store.dispatch(getWorkers({date: this.currentDate}));
+    let width = this.chartRef.element.nativeElement.clientWidth || 1000;
+    width = Math.min(0.8 * width, 1000);
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 
   moveNext() {
@@ -183,11 +185,15 @@ export class WorkersStatsComponent implements OnInit, OnDestroy {
         this.currentDate.setMonth(this.currentDate.getMonth() + 1);
         break;
     }
-    this.store.dispatch(getWorkers({date: this.currentDate}));
+    let width = this.chartRef.element.nativeElement.clientWidth || 1000;
+    width = Math.min(0.8 * width, 1000);
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 
   moveCurrent() {
     this.currentDate = new Date(); // Reset to the current date and time
-    this.store.dispatch(getWorkers({date: this.currentDate}));
+    let width = this.chartRef.element.nativeElement.clientWidth || 1000;
+    width = Math.min(0.8 * width, 1000);
+    this.store.dispatch(getWorkers({date: this.currentDate, maxPoints: width}));
   }
 }

@@ -13,7 +13,7 @@ export interface WorkerExt extends Omit<Worker, 'id'> {
 
 export const getWorkers = createAction(
   workersPrefix + '[get workers and stats]',
-  props<{date: Date, maxPoints: number}>()
+  props<{date?: Date, maxPoints: number}>()
 );
 
 export const setWorkers = createAction(
