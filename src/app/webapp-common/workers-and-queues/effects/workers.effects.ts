@@ -95,7 +95,9 @@ export class WorkersEffects {
       currentStats = cloneDeep(currentStats);
       if (Array.isArray(currentStats) && currentStats.some(topic => topic.dates.length > 1)) {
         timeFrame = now - getLastTimestamp(currentStats) + granularity;
+        console.log('timeFrame calcolato', timeFrame);
       } else {
+        console.log('timeFrame predefinito', range);
         timeFrame = range;
       }
       if (worker) {
